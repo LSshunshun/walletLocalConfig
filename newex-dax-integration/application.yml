@@ -1,0 +1,88 @@
+#
+# tomcat server
+# 
+server:
+  port: 8111
+  error:
+    whitelabel:
+      enabled: false
+  tomcat:
+    max-threads: 2000
+    accept-count: 2000
+    max-connections: 4000
+    min-spare-threads: 5
+  connection-timeout: 5000
+#
+# newex
+#
+newex:
+  integration:
+    datasource:
+      master:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+        jdbc-url: jdbc:mysql://18.182.16.4:3306/integration?characterEncoding=UTF-8&amp;autoReconnect=true&amp;rewriteBatchedStatements=true
+        username: root
+        password: mysql223344
+        pool-name: newex-dax-integration-hikari
+        minimum-idle: 5
+        maximum-pool-size: 20
+        connection-test-query: 'SELECT 1'
+  app:
+    name: newex-dax-integration
+    version: 1.0
+    domain: coinmex.com
+    supported-locales: 'en|en-US|zh-CN|zh-TW|zh-HK'
+    env:
+      name: test
+  security:
+    csrf:
+      referer-pattern: all
+      exclude-path-patterns: /admin/**,/inner/**
+    xss:
+      url-patterns: /v1/*
+
+#
+# spring 
+#
+spring:
+  mvc:
+    favicon:
+      enabled: false
+  http:
+    multipart:
+      max-file-size: 15MB
+      max-request-size: 15MB
+  messages:
+    basename: messages/messages
+    always-use-message-format: true
+    cache-seconds: 3600
+    fallback-to-system-locale: false
+  redis: 
+    host: 18.182.16.4
+    port: 6379
+    timeout: 60000
+    password: redis123456
+    pool: 
+       max-active: 10
+       max-idle: 5
+       max-wait: -1
+       min-idle: 2
+#
+# logging
+#
+logging:
+  config: classpath:conf/logging/logback-spring.xml
+  path: newex-integration-rest/target/logs
+  level:
+    default: INFO
+    commons: INFO
+    dax: DEBUG
+    mybatis: INFO
+#
+# actuator
+#
+management:
+  security:
+    enabled: false
+  add-application-context-header: false
