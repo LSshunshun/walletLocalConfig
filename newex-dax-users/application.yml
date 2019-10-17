@@ -30,7 +30,7 @@ spring:
     cache-seconds: 3600
     fallback-to-system-locale: false
   redis: 
-    host: 18.182.16.4
+    host: localhost
     port: 6379
     timeout: 60000
     password: 
