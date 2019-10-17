@@ -2,7 +2,7 @@
 # tomcat server
 # 
 server:
-  port: 8113
+  port: 8112
   error:
     whitelabel:
       enabled: false
