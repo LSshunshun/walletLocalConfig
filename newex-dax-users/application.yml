@@ -33,7 +33,7 @@ spring:
     host: localhost
     port: 6379
     timeout: 60000
-    password: 
+    password: redis123456
     pool: 
        max-active: 10
        max-idle: 5
@@ -158,7 +158,7 @@ newex:
       host: localhost
       port: 6379
       timeout: 60000
-      password: 
+      password: redis123456
       pool:
        max-active: 10
        max-idle: 5
