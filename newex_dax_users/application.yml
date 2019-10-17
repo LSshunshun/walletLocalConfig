@@ -2,7 +2,7 @@
 # tomcat server
 # 
 server:
-  port: 8111
+  port: 8112
   error:
     whitelabel:
       enabled: false
@@ -12,35 +12,6 @@ server:
     max-connections: 4000
     min-spare-threads: 5
   connection-timeout: 5000
-#
-# newex
-#
-newex:
-  integration:
-    datasource:
-      master:
-        type: com.zaxxer.hikari.HikariDataSource
-        driver-class-name: com.mysql.jdbc.Driver
-        jdbc-url: jdbc:mysql://18.182.16.4:3306/integration?characterEncoding=UTF-8&amp;autoReconnect=true&amp;rewriteBatchedStatements=true
-        username: root
-        password: mysql223344
-        pool-name: newex-dax-integration-hikari
-        minimum-idle: 5
-        maximum-pool-size: 20
-        connection-test-query: 'SELECT 1'
-  app:
-    name: newex-dax-integration
-    version: 1.0
-    domain: coinmex.com
-    supported-locales: 'en|en-US|zh-CN|zh-TW|zh-HK'
-    env:
-      name: test
-  security:
-    csrf:
-      referer-pattern: all
-      exclude-path-patterns: /admin/**,/inner/**
-    xss:
-      url-patterns: /v1/*
 
 #
 # spring 
@@ -62,7 +33,7 @@ spring:
     host: 18.182.16.4
     port: 6379
     timeout: 60000
-    password: redis123456
+    password: 
     pool: 
        max-active: 10
        max-idle: 5
@@ -73,10 +44,10 @@ spring:
 #
 logging:
   config: classpath:conf/logging/logback-spring.xml
-  path: newex-integration/logs
+  path: newex-users/logs
   level:
     default: INFO
-    commons: INFO
+    commons: DEBUG
     dax: DEBUG
     mybatis: INFO
 #
@@ -86,3 +57,115 @@ management:
   security:
     enabled: false
   add-application-context-header: false
+#
+# newex
+#
+newex:
+  app:
+    name: newex-dax-users
+    version: 1.0
+    domain: newex.cc
+    supported-locales: 'en|en-US|zh-CN|zh-TW|zh-HK'
+    env:
+      name: test
+  users:
+    datasource:
+      master:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/user?characterEncoding=UTF-8&amp;autoReconnect=true&amp;rewriteBatchedStatements=true
+        username: root
+        password: mysql223344
+        max-active: 10
+        min-idle: 0
+    channelink:
+      uri: http://test.coinmex.com
+  swagger:
+    terms-of-service-url: http://www.newex.cc
+    contact:
+      url: http://www.newex.cc
+      name: newex
+      email: admin@newex.cc
+    dockets:
+      - name: docket-web
+        group-name: '1.web/移动端外部接口文档'
+        base-package: cc.newex.dax.users.rest.controller.outer.v1
+        title: NewEx-Users
+        version: 2.0
+        description: NewEx-Users外部接口文档
+      - name: docket-admin
+        group-name: '2.feign内部接口文档'
+        base-package: cc.newex.dax.users.rest.controller.inner.v1
+        title: NewEx-Users
+        version: 2.0
+        description: NewEx-Users-内部接口文档
+  security:
+    csrf:
+      referer-pattern: all
+      exclude-path-patterns: /admin/**,/inner/**
+    xss:
+      url-patterns: /v1/*
+    jwt:
+      secret: 'ZwwXGHRDUy1wUWgv'
+      crypto-key: 'Dk4nIS49RksJJRoB'
+      exclude-path-patterns: /customError/**,/admin/**,/inner/**,/v1/users/membership/**,/v1/users/support/public/**,/inner/v1/users/**,/admin/v1/users/**
+      validate-ip-and-device: false
+  fileupload:
+    s3:
+      vpc-endpoint: http://s3.ap-northeast-1.amazonaws.com
+      endpoint: http://s3.ap-northeast-1.amazonaws.com
+      access-key-id: XXX
+      access-key-secret: XXX
+      bucket-name: tk-public-service
+      path: ctb/users/dev/kyc/images
+      region: ap-northeast-1
+    oss:
+      vpc-endpoint: https://oss-cn-beijing.aliyuncs.com
+      endpoint: https://oss-cn-beijing.aliyuncs.com
+      access-key-id: XXX
+      access-key-secret: XXX
+      bucket-name: sg-coinmex-public-dx
+      path: users/dev/pay/images
+      region: oss-cn-beijing
+  feignClient:
+    dax:
+      spot: newex-dax-spot
+      integration: newex-dax-integration
+  faceid:
+    api_key: XXX
+    api_secret: XXX
+    ocridcard_url: https://chinaproxy.coinmex.com:633/faceid/v1/ocridcard
+    ocridcard_referer: https://api.faceid.com
+    token_url: https://chinaproxy.coinmex.com:633/faceid/lite/get_token
+    token_referer: https://api.megvii.com
+    result_url: https://chinaproxy.coinmex.com:633/faceid/liveness/v2/get_result
+    result_referer: https://api.megvii.com
+    verify_url: https://chinaproxy.coinmex.com:633/faceid/v2/verify
+    verify_referer: https://api.megvii.com
+    return_url: https://www.coinmex.vip/
+    notify_url: https://www.coinmex.vip/
+    precision: 0.8
+    edited: 0.5
+  activity:
+    url: https://www.coinmex.vip/invitation/signup/%s/%s
+  openapi:
+    apikey:
+      prefix: cmx-
+  session:
+    max-inactive-interval: 18000000
+  ucenter:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 60000
+      password: redis
+      pool:
+       max-active: 10
+       max-idle: 5
+       max-wait: -1
+       min-idle: 2
+  ratelimiter:
+    ip-rate-limiter:
+      enabled: true
+      interceptor:
+        include-url-patterns: '/v1/users/support/public/username/validation,/v1/users/membership/forget-pwd/**'
