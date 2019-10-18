@@ -75,7 +75,7 @@ newex:
         driver-class-name: com.mysql.jdbc.Driver
         url: jdbc:mysql://localhost:3306/user?characterEncoding=UTF-8&amp;autoReconnect=true&amp;rewriteBatchedStatements=true
         username: root
-        password: mysql223344
+        password: mysql22334445
         max-active: 10
         min-idle: 0
     channelink:
