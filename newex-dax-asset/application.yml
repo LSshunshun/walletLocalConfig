@@ -1,0 +1,165 @@
+#
+# tomcat server
+# 
+server:
+  port: 8114
+  error:
+    whitelabel:
+      enabled: false
+  tomcat:
+    max-threads: 2000
+    accept-count: 2000
+    max-connections: 4000
+    min-spare-threads: 5
+  connection-timeout: 5000
+#
+# newex
+#
+newex:
+  asset:
+    datasource:
+      master:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://18.182.16.4:3306/asset?characterEncoding=UTF-8&amp;autoReconnect=true&amp;rewriteBatchedStatements=true
+        username: root
+        password: mysql223344
+        max-active: 10
+        min-idle: 0
+    reconciliation:
+      biz: spot
+  app:
+    name: newex-dax-asset
+    version: 1.0
+    domain: newex.cc
+    supported-locales: 'en|en-US|zh-CN|zh-TW|zh-HK'
+    env:
+      name: test
+  feignClient:
+    wallet:
+      core: newex-wallet-core-dev
+    dax:
+      spot: newex-dax-spot
+      c2c: newex-dax-c2c
+      users: newex-dax-users
+      asset : newex-dax-asset-dev
+      integration : newex-dax-integration
+      portfolio : newex-dax-portfolio
+      extra: newex-dax-extra
+      perpetual: newex-dax-perpetual-rest
+  swagger:
+    terms-of-service-url: http://www.newex.cc
+    contact:
+      url: http://www.newex.cc
+      name: newex
+      email: admin@newex.cc
+    dockets:
+      - name: docket-web
+        group-name: '1.web/移动端外部接口文档'
+        base-package: cc.newex.dax.asset.rest.controller
+        title: NewEx-Asset
+        version: 2.0
+        description: NewEx-Asset外部接口文档
+      - name: docket-admin
+        group-name: '2.feign内部接口文档'
+        base-package: cc.newex.dax.asset.inner
+        title: NewEx-Asset
+        version: 2.0
+        description: NewEx-Asset-内部接口文档
+  security:
+    csrf:
+      referer-pattern: all
+      exclude-path-patterns: /admin/**,/inner/**
+    xss:
+      url-patterns: /v1/*
+    jwt:
+      secret: 'ZwwXGHRDUy1wUWgv'
+      crypto-key: 'Dk4nIS49RksJJRoB'
+      exclude-path-patterns: /customError/**,/admin/**,/inner/**,/v1/asset/open/**
+    frozen:
+      biz-type: 'asset'
+      url-patterns:
+        include-url-patterns: /v1/asset/**/withdraw
+  ucenter:
+    redis:
+      host: 18.182.16.4
+      port: 6379
+      timeout: 60000
+      password: redis123456
+      pool:
+       max-active: 10
+       max-idle: 5
+       max-wait: -1
+       min-idle: 2
+  net:
+    pubKey: xpub661MyMwAqRbcF7HAsXGfcZ31hv3iDX8RRf9L6fy7YdGejPzsQL6SajJZJBdCyabcAaamqrq8bu5o3LKnwqhphX9e2Pay4K7nRELjrymkL9e
+  payToken:
+    defaultUser: 10
+  innerProxy: http://innerproxy.cmx.com
+  exchange:
+    luckywin:
+      account: 128166
+#
+# spring 
+#
+spring:
+  mvc:
+    favicon:
+      enabled: false
+  http:
+    multipart:
+      max-file-size: 15MB
+      max-request-size: 15MB
+  messages:
+    basename: messages/messages
+    always-use-message-format: true
+    cache-seconds: 3600
+    fallback-to-system-locale: false
+  redis: 
+    host: 18.182.16.4
+    port: 6379
+    timeout: 60000
+    password: redis123456
+    pool: 
+       max-active: 10
+       max-idle: 5
+       max-wait: -1
+       min-idle: 2
+#
+# logging
+#
+logging:
+  config: classpath:conf/logging/logback-spring.xml
+  path: newex-asset/logs
+  level:
+    default: INFO
+    commons: INFO
+    dax: INFO
+    mybatis: INFO
+#
+# actuator
+#
+management:
+  security:
+    enabled: false
+  add-application-context-header: false
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 10000
+        readTimeout: 40000
+#
+# xxl
+#
+xxl:
+  job:
+    accessToken: newex_!*0127aim
+    admin:
+      addresses: http://18.182.16.4:8300
+    executor:
+      appname: xxl-job-executor-asset
+      ip: 18.182.16.4
+      port: 7001
+      logpath: /home/admin/logs/newex/newex-asset/jobhandler
+      logretentiondays: 1

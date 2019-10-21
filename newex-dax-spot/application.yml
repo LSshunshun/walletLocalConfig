@@ -1,0 +1,159 @@
+﻿#
+# server
+#
+server:
+  port: 8113
+  error:
+    whitelabel:
+      enabled: false
+  tomcat:
+    max-threads: 2000
+    accept-count: 2000
+    max-connections: 4000
+    min-spare-threads: 5
+  connection-timeout: 5000
+#
+#  datasource
+#
+newex:
+  app:
+    name: newex-dax-spot
+    version: 2.0
+    domain: newex.cc
+    supported-locales: 'en|en-US|zh-CN|zh-TW|zh-HK'
+    env:
+      name: test
+  feignClient.dax.integration: newex-dax-integration
+  feignClient.dax.asset: newex-dax-asset
+  feignClient.dax.users: newex-dax-users
+  spot:
+    maker:
+      userId: '21888891'
+    datasource:
+      master:
+          driver-class-name: com.mysql.jdbc.Driver
+          max-active: 100
+          min-idle: 10
+          password: 'mysql223344'
+          type: com.alibaba.druid.pool.DruidDataSource
+          url: 'jdbc:mysql://18.182.16.4:3306/spot?allowMultiQueries=true&amp;characterEncoding=UTF-8&amp;autoReconnect=true&amp;rewriteBatchedStatements=true'
+          username: 'root'
+      slave:
+          driver-class-name: com.mysql.jdbc.Driver
+          max-active: 100
+          min-idle: 10
+          password: 'mysql223344'
+          type: com.alibaba.druid.pool.DruidDataSource
+          url: 'jdbc:mysql://18.182.16.4:3306/spot?allowMultiQueries=true&amp;characterEncoding=UTF-8&amp;autoReconnect=true&amp;rewriteBatchedStatements=true'
+          username: 'root'
+      history:
+          driver-class-name: com.mysql.jdbc.Driver
+          max-active: 100
+          min-idle: 10
+          password: 'mysql223344'
+          type: com.alibaba.druid.pool.DruidDataSource
+          url: 'jdbc:mysql://18.182.16.4:3306/spot_history?allowMultiQueries=true&amp;characterEncoding=UTF-8&amp;autoReconnect=true&amp;rewriteBatchedStatements=true'
+          username: 'root'
+    center:
+      new-product-grayscale: false
+    common:
+      online: false
+      net: newex.com
+      url: http://localtest.intra.newex.cn:6666
+      v2-api-url: http://localhost:8100/v2
+      secret: xxx
+      host: 
+      newexHost: 
+      cnHost: 
+      comHost: 
+      activity-code: register
+    margin:
+      user-id: 3
+      test_user:
+        - 2109198
+      transfer:
+        private-key: xxx
+        spot-public-key: xxx
+        spot-callback-url: http://127.0.0.1:8108/v1/asset/accounts/transfer-in
+  swagger:
+    terms-of-service-url: http://www.cointobe.com
+    contact:
+      url: http://www.cointobe.com
+      name: newex
+      email: admin@cointobe.com
+    dockets:
+      - name: ccex-docket-web
+        group-name: 'newex-Spot接口文档'
+        base-package: cc.newex.dax.ccex.controller
+        title: newex-Spot
+        version: 2.0
+        description: newex-Spot外部接口文档
+  security:
+    csrf:
+      referer-pattern: all
+      exclude-path-patterns: /inner/**
+    xss:
+      url-patterns: /v1/*
+    jwt:
+      secret: 'xxx'
+      crypto-key: 'xxx'
+      exclude-path-patterns: /customError/**,/admin/**,/inner/**,/v1/spot/public/**,/v1/**
+      validate-ip-and-device: false
+    frozen:
+      biz-type: 'spot'
+      url-patterns:
+        include-url-patterns:
+        exclude-url-patterns: /customError/**,/admin/**,/inner/**,/v1/spot/public/**,/v1/**
+  ucenter:
+    redis:
+      host: 18.182.16.4
+      port: 6379
+      timeout: 60000
+      password: redis123456
+      pool:
+       max-active: 10
+       max-idle: 5
+       max-wait: -1
+       min-idle: 2
+#
+# spring
+#
+spring:
+  mvc:
+    favicon:
+      enabled: false
+  messages:
+    basename: messages/messages
+    always-use-message-format: true
+    cache-seconds: 3600
+    fallback-to-system-locale: false
+  aop:
+    proxy-target-class: true
+  redis:
+    host: 18.182.16.4
+    port: 6379
+    timeout: 60000
+    password: redis123456
+    pool:
+       max-active: 5
+       max-idle: 5
+       max-wait: -1
+       min-idle: 2
+#
+# logging config file location
+#
+logging:
+  config: classpath:conf/logging/logback-spring.xml
+  path: newex-spot/logs
+  level:
+    default: INFO
+    commons: DEBUG
+    dax: DEBUG
+    mybatis: DEBUG
+#
+# actuator
+#
+management:
+  security:
+    enabled: false
+  add-application-context-header: false

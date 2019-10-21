@@ -1,0 +1,74 @@
+server:
+  port: 8300
+
+#  数据库配置
+spring:
+  datasource:
+      type: com.zaxxer.hikari.HikariDataSource
+      driver-class-name: com.mysql.jdbc.Driver
+      username: root
+      password: mysql223344
+      url: jdbc:mysql://18.182.16.4:3306/scheduler?useUnicode=true&characterEncoding=UTF-8
+      hikari:
+        minimum-idle: 5
+        maximum-pool-size: 20
+        connection-test-query: 'SELECT 1'
+  freemarker:
+    request-context-attribute: request  #req访问request
+    suffix: .ftl  #后缀名
+    content-type: text/html
+    enabled: true
+    cache: false #缓存配置
+    template-loader-path: classpath:/template/ #模板加载路径 按需配置
+    charset: UTF-8 #编码格式
+    settings:
+        number_format: '0.##'   #数字格式化，无小数点
+newex:
+  app:
+    name: newex-dax-scheduler-amdin
+    version: 2.0
+    domain: newex
+    supported-locales: 'en|en-US|zh-CN|zh-TW|zh-HK'
+    env:
+      name: test
+  common:
+    evn: prod
+    ip: 10.100.0.50
+    adminEmail: wx0126@126.com
+    adminPhone: 13252736126
+
+  feignClient:
+    dax:
+      integration: newex-dax-integration
+#
+# mybatis
+#
+mybatis:
+  mapper-locations: classpath:mybatis/mapper/*.xml
+  config-location: classpath:mybatis/mybatis-config.xml
+#
+# xxl
+#
+xxl:
+  job:
+    accessToken: newex_!*0127aim
+    mail:
+      host:
+      port:
+      username:
+      password:
+      sendNick:
+    login:
+      username:
+      password:
+    i18n:
+
+logging:
+  config: classpath:conf/logging/logback-spring.xml
+  path: scheduler/logs
+  level:
+    default: INFO
+    commons: DEBUG
+    exchange: DEBUG
+    mybatis: DEBUG
+
