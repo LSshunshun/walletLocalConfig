@@ -92,7 +92,7 @@ newex:
        max-wait: -1
        min-idle: 2
   net:
-    pubKey: xpub661MyMwAqRbcF7HAsXGfcZ31hv3iDX8RRf9L6fy7YdGejPzsQL6SajJZJBdCyabcAaamqrq8bu5o3LKnwqhphX9e2Pay4K7nRELjrymkL9e
+    pubKey: xpub6JXUni9KfV9se5Wt5XD3bbqqvHANc2r5ze6tZwfcvcEnPzoTtzMPtvtWYCkPoXNvG1b5CPRyq6qYVosf2okrT6yXce5irbGYUQpwRwzrbQ8
   payToken:
     defaultUser: 10
   innerProxy: http://innerproxy.cmx.com
